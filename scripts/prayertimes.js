@@ -1,7 +1,5 @@
   // Function to fetch and display prayer times
-  async function fetchPrayerTimes(year, month) {
-    const latitude = 51.508515; // Example latitude
-    const longitude = -0.1254872; // Example longitude
+  async function fetchPrayerTimes(year, month, latitude, longitude) {
     const method = 2; // Method number 2
 
     try {
@@ -22,5 +20,23 @@
     }
   }
 
-  // Call the function to fetch and display specific prayer times
-  fetchPrayerTimes(2017, 4);
+  // Get user's current location
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Months are zero-indexed, so add 1
+        fetchPrayerTimes(year, month, latitude, longitude);
+      }, (error) => {
+        console.error('Error getting location:', error);
+      });
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  }
+
+  // Call the function to get user's location and fetch prayer times
+  getLocation();
